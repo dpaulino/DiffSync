@@ -15,6 +15,7 @@
 	<IncludeSymbols>true</IncludeSymbols>
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+	<RepositoryUrl>https://github.com/dpaulino/DiffSync</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

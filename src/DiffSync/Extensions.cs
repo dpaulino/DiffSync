@@ -1,5 +1,6 @@
 ﻿using KellermanSoftware.CompareNetObjects;
 using Newtonsoft.Json.Linq;
+using System;
 
 namespace DiffSync
 {
@@ -22,6 +23,12 @@ namespace DiffSync
             }
 
             return x.ToObject<T>();
+        }
+
+        public static T Merge<T>(this T obj1, T obj2)
+        {
+            // TODO
+            throw new NotImplementedException();
         }
     }
 }
