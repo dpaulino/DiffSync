@@ -2,11 +2,31 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<PackageId>DiffSync</PackageId>
+	<AssemblyName>DiffSync</AssemblyName>
+	<Version>0.8.0-preview</Version>
+    <Authors>Daniel Paulino</Authors>
+    <Company />
+    <Description>A .NET Standard 2.0 library to help with data synchronization, such as determining object differences, applying patches, and merging changes.</Description>
+    <Copyright>© Daniel Paulino</Copyright>
+	<IsPackable>true</IsPackable>
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CompareNETObjects" Version="4.67.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
