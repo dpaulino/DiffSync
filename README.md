@@ -1,8 +1,9 @@
 # DiffSync
 A .NET Standard 2.0 library to help with data synchronization, such as determining object differences, applying patches, and merging changes.
 
-# Sample Usage
+Install from nuget: https://www.nuget.org/packages/DiffSync
 
+## Diff and Patch
 ```csharp
 using DiffSync;
 using JeniusApps.Nightingale.Data.Models;
@@ -48,4 +49,71 @@ var newResult = w2.Diff(w3);
 
 // They should be identical.
 Assert.True(newResult.AreEqual);
+```
+
+## Merge
+```csharp
+var wBase = new Workspace
+{
+    Name = "test",
+    Id = "1",
+    Items = new List<Item>
+    {
+        new Item
+        {
+            Name = "item1"
+        }
+    }
+};
+
+var wFork1 = new Workspace
+{
+    Name = "test",
+    Id = "1ConflictFork1",
+    Items = new List<Item>
+    {
+        new Item
+        {
+            Name = "fork 1"
+        }
+    }
+};
+
+var wFork2 = new Workspace
+{
+    Name = "fork 2",
+    Id = "1ConflictFork2",
+    Items = new List<Item>
+    {
+        new Item
+        {
+            Name = "item1"
+        },
+        new Item
+        {
+            Name = "foobar"
+        }
+    }
+};
+
+var expectedMergeResult = new Workspace
+{
+    Name = "fork 2",
+    Id = "1ConflictFork2",
+    Items = new List<Item>
+    {
+        new Item
+        {
+            Name = "fork 1"
+        },
+        new Item
+        {
+            Name = "foobar"
+        }
+    }
+};
+
+var mergeResult = wFork1.Merge(wFork2, wBase);
+var resultDiff = expectedMergeResult.Diff(mergeResult);
+Assert.True(resultDiff.AreEqual);
 ```
