@@ -45,9 +45,9 @@ namespace DiffSync
         }
 
         public static T Merge<T>(
-            this T obj1,
+            this T commonObjBase,
+            T obj1,
             T obj2,
-            T commonObjBase,
             Func<Difference, Difference, Difference> ResolveCollision = null)
         {
             ComparisonResult objDiff = obj1.Diff(obj2);
