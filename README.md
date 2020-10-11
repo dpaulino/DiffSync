@@ -113,7 +113,7 @@ var expectedMergeResult = new Workspace
     }
 };
 
-var mergeResult = wFork1.Merge(wFork2, wBase);
+var mergeResult = wBase.Merge(wFork1, wFork2);
 var resultDiff = expectedMergeResult.Diff(mergeResult);
 Assert.True(resultDiff.AreEqual);
 ```
