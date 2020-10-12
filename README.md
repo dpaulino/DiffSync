@@ -117,3 +117,8 @@ var mergeResult = wBase.Merge(wFork1, wFork2);
 var resultDiff = expectedMergeResult.Diff(mergeResult);
 Assert.True(resultDiff.AreEqual);
 ```
+
+# Copyright and open source license notices
+
+- This library uses [Compare-Net-Objects](https://github.com/GregFinzer/Compare-Net-Objects) to calculate the diff for objects. Its license is here: https://github.com/GregFinzer/Compare-Net-Objects/wiki/Licensing.
+- This library uses [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json). Its license is here: https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md
