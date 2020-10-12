@@ -118,7 +118,7 @@ var resultDiff = expectedMergeResult.Diff(mergeResult);
 Assert.True(resultDiff.AreEqual);
 ```
 
-# Copyright and open source license notices
+# Attributions
 
-- This library uses [Compare-Net-Objects](https://github.com/GregFinzer/Compare-Net-Objects) to calculate the diff for objects. Its license is here: https://github.com/GregFinzer/Compare-Net-Objects/wiki/Licensing.
-- This library uses [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json). Its license is here: https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md
+- [Compare-Net-Objects](https://github.com/GregFinzer/Compare-Net-Objects) to calculate the diff for objects. License: https://github.com/GregFinzer/Compare-Net-Objects/wiki/Licensing.
+- [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json). License: https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md
