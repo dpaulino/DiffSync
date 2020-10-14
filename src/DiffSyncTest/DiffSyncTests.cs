@@ -42,9 +42,10 @@ namespace DiffSyncTest
             };
 
 
-            var comparisonResult = w1.Diff(w2);
+            var diff = w1.Diff(w2);
+            string expectedString = "{\r\n  \"Items\": {\r\n    \"_t\": \"a\",\r\n    \"0\": {\r\n      \"Name\": [\r\n        \"item1\",\r\n        \"item1new\"\r\n      ]\r\n    },\r\n    \"1\": [\r\n      {\r\n        \"id\": null,\r\n        \"parentId\": null,\r\n        \"IsTemporary\": false,\r\n        \"Properties\": null,\r\n        \"Url\": null,\r\n        \"Auth\": null,\r\n        \"Body\": null,\r\n        \"MockData\": null,\r\n        \"Children\": null,\r\n        \"Headers\": null,\r\n        \"ChainingRules\": null,\r\n        \"Type\": 0,\r\n        \"Name\": \"item2\",\r\n        \"IsExpanded\": false,\r\n        \"Method\": null,\r\n        \"Response\": null\r\n      }\r\n    ]\r\n  }\r\n}";
 
-            Assert.True(comparisonResult.Differences.Count == 2);
+            Assert.Equal(expectedString, diff.ToString());
         }
 
         [Fact]
@@ -76,13 +77,10 @@ namespace DiffSyncTest
                 }
             };
 
-            var comparisonResult = w1.Diff(w2);
-
-            var w3 = w1.Patch(comparisonResult);
-
+            var diff = w1.Diff(w2);
+            var w3 = w1.Patch(diff);
             var newResult = w2.Diff(w3);
-
-            Assert.True(newResult.AreEqual);
+            Assert.Null(newResult);
         }
 
         [Fact]
@@ -104,13 +102,10 @@ namespace DiffSyncTest
                 }
             };
 
-            var comparisonResult = a1.Diff(a2);
-
-            var w3 = a1.Patch(comparisonResult);
-
-            var newResult = a2.Diff(w3);
-
-            Assert.True(newResult.AreEqual);
+            var diff = a1.Diff(a2);
+            var a3 = a1.Patch(diff);
+            var newResult = a2.Diff(a3);
+            Assert.Null(newResult);
         }
 
         [Fact]
@@ -178,56 +173,7 @@ namespace DiffSyncTest
 
             var mergeResult = wBase.Merge(wFork1, wFork2);
             var resultDiff = expectedMergeResult.Diff(mergeResult);
-            Assert.True(resultDiff.AreEqual);
-        }
-
-        [Fact]
-        public void Obj1ChangeOnlyMergeTest()
-        {
-            var wBase = new Workspace
-            {
-                Name = "test",
-                Id = "1",
-                Items = new List<Item>
-                {
-                    new Item
-                    {
-                        Name = "item1"
-                    }
-                }
-            };
-
-            var wFork2 = wBase;
-
-            var wFork1 = new Workspace
-            {
-                Name = "fork 2",
-                Id = "1",
-                Items = new List<Item>
-                {
-                    new Item
-                    {
-                        Name = "item1"
-                    }
-                }
-            };
-
-            var expectedMergeResult = new Workspace
-            {
-                Name = "fork 2",
-                Id = "1",
-                Items = new List<Item>
-                {
-                    new Item
-                    {
-                        Name = "item1"
-                    }
-                }
-            };
-
-            var mergeResult = wBase.Merge(wFork1, wFork2);
-            var resultDiff = expectedMergeResult.Diff(mergeResult);
-            Assert.True(resultDiff.AreEqual);
+            Assert.Null(resultDiff);
         }
 
         [Fact]
@@ -242,7 +188,7 @@ namespace DiffSyncTest
 
             var mergeResult = wBase.Merge(wFork1, wFork2);
             var resultDiff = expectedMergeResult.Diff(mergeResult);
-            Assert.True(resultDiff.AreEqual);
+            Assert.Null(resultDiff);
         }
     }
 }
