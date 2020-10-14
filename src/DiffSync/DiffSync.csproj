@@ -6,7 +6,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<PackageId>DiffSync</PackageId>
 	<AssemblyName>DiffSync</AssemblyName>
-	<Version>1.1.0-preview</Version>
+	<Version>2.0.0-preview</Version>
     <Authors>Daniel Paulino</Authors>
     <Company />
     <Description>A .NET Standard 2.0 library to help with object synchronization, such as determining object differences, applying patches, and merging changes.</Description>
@@ -16,10 +16,11 @@
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 	<RepositoryUrl>https://github.com/dpaulino/DiffSync</RepositoryUrl>
+	<PackageReleaseNotes>2.0.0 - breaking changes. Switched diff operation to use a different library.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CompareNETObjects" Version="4.67.0" />
+    <PackageReference Include="JsonDiffPatch.Net" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 

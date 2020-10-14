@@ -1,88 +1,53 @@
-﻿using KellermanSoftware.CompareNetObjects;
+﻿using JsonDiffPatchDotNet;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace DiffSync
 {
     public static class Extensions
     {
-        public static ComparisonResult Diff<T>(this T objOld, T objNew)
+        /// <summary>
+        /// Returns null if objects are identical.
+        /// </summary>
+        public static JToken Diff<T>(this T objOld, T objNew)
         {
-            CompareLogic compareLogic = new CompareLogic();
-            compareLogic.Config.MaxDifferences = int.MaxValue;
-            return compareLogic.Compare(objOld, objNew);
+            if (objOld == null) throw new ArgumentNullException(nameof(objOld));
+            if (objNew == null) throw new ArgumentNullException(nameof(objNew));
+
+            var jdp = new JsonDiffPatch();
+            var left = JToken.FromObject(objOld);
+            var right = JToken.FromObject(objNew);
+            return jdp.Diff(left, right);
         }
 
-        public static T Patch<T>(this T objOld, ComparisonResult diffResults)
+        public static T Patch<T>(this T objOld, JToken patch)
         {
-            return objOld.Patch(diffResults.Differences);
+            var jdp = new JsonDiffPatch();
+            JToken left = JToken.FromObject(objOld);
+            var result = jdp.Patch(left, patch);
+            return result.ToObject<T>();
         }
 
-        public static T Patch<T>(this T objOld, IList<Difference> diffResults)
+        /// <summary>
+        /// Merges the forks onto the common base. Latter
+        /// forks will overwrite any conflicts from former
+        /// forks.
+        /// </summary>
+        /// <param name="commonObjBase">The most recent ancestor of the forks.</param>
+        /// <param name="forks">
+        /// The different forks that will be merged. 
+        /// Merge conflicts are resolved by taking the later fork in the list.
+        /// </param>
+        /// <returns>A merged object.</returns>
+        public static T Merge<T>(this T commonObjBase, params T[] forks)
         {
-            if (diffResults == null || diffResults.Count == 0)
+            T rollingResult = commonObjBase;
+            foreach (JToken diff in forks.Select(x => commonObjBase.Diff(x)))
             {
-                return objOld;
+                rollingResult = rollingResult.Patch(diff);
             }
-
-            JObject x = JObject.FromObject(objOld);
-
-            foreach (var diff in diffResults)
-            {
-                if (diff == null)
-                {
-                    continue;
-                }
-
-                JToken jprop = x.SelectToken(diff.ParentPropertyName);
-                string propertyName = diff.PropertyName.Remove(0, diff.ParentPropertyName.Length).TrimStart('.');
-                jprop[propertyName] = JToken.FromObject(diff.Object2);
-            }
-
-            return x.ToObject<T>();
-        }
-
-        public static T Merge<T>(
-            this T commonObjBase,
-            T obj1,
-            T obj2,
-            Func<Difference, Difference, Difference> ResolveCollision = null)
-        {
-            ComparisonResult objDiff = obj1.Diff(obj2);
-
-            if (objDiff.AreEqual || commonObjBase == null)
-            {
-                return obj2;
-            }
-
-            ComparisonResult obj1ValidChanges = commonObjBase.Diff(obj1);
-            ComparisonResult obj2ValidChanges = commonObjBase.Diff(obj2);
-
-            var combinedValidChanges = new List<Difference>();
-
-            foreach (var diff in objDiff.Differences)
-            {
-                Difference obj1Change = obj1ValidChanges.Differences.FirstOrDefault(x => x.PropertyName == diff.PropertyName);
-                Difference obj2Change = obj2ValidChanges.Differences.FirstOrDefault(x => x.PropertyName == diff.PropertyName);
-
-                if (obj1Change != null && obj2Change != null)
-                {
-                    Difference resolvedDiff = ResolveCollision == null ? diff : ResolveCollision(obj1Change, obj2Change);
-                    combinedValidChanges.Add(resolvedDiff);
-                }
-                else if (obj1Change != null)
-                {
-                    combinedValidChanges.Add(obj1Change);
-                }
-                else
-                {
-                    combinedValidChanges.Add(diff);
-                }
-            }
-
-            return commonObjBase.Patch(combinedValidChanges);
+            return rollingResult;
         }
     }
 }
