@@ -30,25 +30,14 @@ var w2 = new Workspace
         new Item
         {
             Name = "item1new"
-        },
-        new Item
-        {
-            Name = "item2"
         }
     }
 };
 
-// Here is the diff
-var comparisonResult = w1.Diff(w2);
-
-// Apply the diff to w1 to produce a new obj
-var w3 = w1.Patch(comparisonResult);
-
-// Try getting the diff between obj2 and obj3
+var diff = w1.Diff(w2);
+var w3 = w1.Patch(diff);
 var newResult = w2.Diff(w3);
-
-// They should be identical.
-Assert.True(newResult.AreEqual);
+Assert.Null(newResult);
 ```
 
 ## Merge
@@ -115,10 +104,10 @@ var expectedMergeResult = new Workspace
 
 var mergeResult = wBase.Merge(wFork1, wFork2);
 var resultDiff = expectedMergeResult.Diff(mergeResult);
-Assert.True(resultDiff.AreEqual);
+Assert.Null(resultDiff);
 ```
 
 # Attributions
 
-- [Compare-Net-Objects](https://github.com/GregFinzer/Compare-Net-Objects) to calculate the diff for objects. License: https://github.com/GregFinzer/Compare-Net-Objects/wiki/Licensing.
+- [jsondiffpatch.net](https://github.com/wbish/jsondiffpatch.net). License: https://github.com/wbish/jsondiffpatch.net/blob/master/LICENSE.
 - [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json). License: https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md
